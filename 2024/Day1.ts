@@ -44,6 +44,7 @@ const arr = input.trim().split('\n');
 const arr1: number[] = [];
 const arr2: number[] = [];
 
+/** @Part 1. */
 // Split the input text file into two arrays, that we will then use to sort.
 arr.forEach((line: string) => {
     const [num1, num2] = line.trim().split(/\s+/);
@@ -66,6 +67,7 @@ console.log('Your sum is:', runningSum);
 
 /** This marks the end of the first part of the problem. For the second part of the problem, let's use a cache. */
 
+/** @Part 2. */
 // We'll just use a simple in-memory cache.
 const similarityCache = {};
 
