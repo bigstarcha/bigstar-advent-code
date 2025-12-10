@@ -9,11 +9,27 @@ import fs from 'fs';
 
 /**
  * @note A helper function to determine if an ID is valid.
- * Let's use regex here.
  */
 function isIdValid(id: string): boolean {
-    const pattern: RegExp = /(\d){2}/; // Any sequence of digits repeated two times I think. \d matches any integer, {n} means exactly n times.
-    return pattern.test(id);
+    const left = id.slice(0, id.length / 2);
+    const right = id.slice(id.length / 2);
+    return left === right;
+}
+
+/**
+ * @note A helper function to determine if an ID is valid.
+ * I tried to do a regex solution initially but was a little off; thankfully the YT video helped.
+ * Source: https://www.youtube.com/watch?v=-G-nU0NVouI
+ */
+function isIdValidRegex(id: string): boolean {
+    return /^(\d+)\1$/.test(id);
+}
+
+/**
+ * @note The same function but for the V2 version.
+ */
+function isIdValidV2(id: string): boolean {
+    return /^(\d+)\1+$/.test(id); // + means find one or more of
 }
 
 /**
@@ -27,8 +43,26 @@ function findInvalidIdSum(ranges: string[]): number {
         const [start, end] = range.split('-');
         // Brute force
         for (let i = Number(start); i <= Number(end); i++) {
-            if (isIdValid(String(i))) {
-                console.log(i, "matches the regular expression.");
+            if (isIdValidRegex(String(i))) {
+                sum += i;
+            }
+        }
+    });
+
+    return sum;
+}
+
+/**
+ * @second Find the sum of all invalid IDs but, invalid IDs are now any sequence of digits repeated AT LEAST twice.
+ */
+function findInvalidIdSumV2(ranges: string[]): number {
+    let sum = 0;
+
+    ranges.forEach(range => {
+        const [start, end] = range.split('-');
+        // Brute force
+        for (let i = Number(start); i <= Number(end); i++) {
+            if (isIdValidV2(String(i))) {
                 sum += i;
             }
         }
@@ -42,5 +76,7 @@ const input = fs.readFileSync('day2input.txt', 'utf-8');
 const arr = input.trim().split(/[,\n]/).filter(range => range !== ''); // Split by comma and new line. Filter out empty strings.
 
 const result1 = findInvalidIdSum(arr);
+const result2 = findInvalidIdSumV2(arr);
 console.log(result1);
+console.log(result2);
 

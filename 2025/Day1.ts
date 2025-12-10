@@ -56,21 +56,23 @@ function findPasswordWithPassingZeros(rotations: string[]): number {
 
         const turn = (direction === 'L' ? -1 : 1) * Number(amount);
 
-        const numTurns = Math.floor(turn / 100); // A turn of 1.9 would still be one turn because you didn't complete the second turn yet. Hence Math.floor()
+        // A turn of 1.9 would still be one turn because you didn't complete the second turn yet.
+        // However Math.floor() only rounds down if the number is positive. If it's negative we gotta go the other way around, so Math.ceil().
+        const numTurns = turn >= 0 ? Math.floor(turn / 100) : Math.ceil(turn / 100);
 
         // We hit 0
         if ((dial + turn) % 100 == 0) {
-            password += 1;
+            password += 1 + numTurns;
             dial = (dial + turn) % 100; // Set the dial to the new value
         }
         // Or, we turned to the right and passed the dial
         else if (dial + turn >= 100) {
-            password += numTurns; // 1 for passing 0, and however many additional full rotations.
+            password += 1 + numTurns; // 1 for passing 0, and however many additional full rotations.
             dial = (dial + turn) % 100; // Set the dial to the new value
         }
         // Or, we turned to the left and passed the dial
         else if (dial + turn < 0) {
-            password += (numTurns * -1); // 1 for passing 0, and however many additional full rotations.
+            password += 1 + (numTurns * -1); // 1 for passing 0, and however many additional full rotations.
             dial = 100 + ((dial + turn) % 100);
         }
 
